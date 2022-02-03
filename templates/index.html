@@ -1,0 +1,281 @@
+<html>
+
+<head>
+    <title> SIMON MÓWI</title>
+    <style>
+        .column {
+            float: left;
+            width: 100px;
+            padding: 50px;
+            height: 100px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .footer {
+            background-color: #6c00c5;
+            color: #ffffff;
+            text-align: center;
+            font-size: 12px;
+            padding: 15px;
+        }
+
+        .center {
+            height: 30px;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body style="background-color:black;">
+
+    <script type=text/javascript src="{{url_for('static', filename='simon.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+
+            const getSensorReading = function () {
+                fetch(`http://${location.host}/update`)
+                    .then((resp) => resp.json())
+                    .then(function (response) {
+                        input = response.count;
+                        actualData = response.data;
+                        keyP = response.keyP.toFixed(0);
+                        document.getElementById('test').innerHTML = actualData;
+                        if (keyP != -1) {
+                            user_turn(keyP)
+                            document.getElementById('gpio').innerHTML = keyP;
+                            gpio.style = style = "color: rgb(255,255,255)";
+                        } else {
+                            gpio.style = style = "color: rgb(0,0,0)";
+                        }
+
+                    });
+            }
+            getSensorReading();
+            setInterval(getSensorReading, 1000);
+        });
+    </script>
+
+
+    <div id='dh' style="color: rgb(255,255,255)"> </div>
+    <div id='gpio' style="color: rgb(255,255,255)"> </div>
+    <div class="center" onclick="start_f()" id="start" style="cursor: hand; color: rgb(212, 0, 255)">
+        <p id="startx">Start</p>
+    </div>
+    <div class="center" onclick="reset_f()" id="reset" style="cursor: hand; color: rgb(0,0,0)">
+        <p id="resetx">Reset</p>
+    </div>
+    <div class="center" id="wynik" style=" color: rgb(255, 255, 255)">
+        <p id="wynikx">Aktualny wynik: 0</p>
+    </div>
+    <div class="center" id="koniec" style=" color: rgb(255, 255, 255)">
+        <p id="koniecx"></p>
+    </div>
+    <canvas id="canvas" width="25" height="25"></canvas>
+
+    <table style="width:400px; height:400px; margin-left:auto; margin-right:auto">
+        <tbody>
+            <tr>
+                <td style="width:25%">
+                    <div onclick="myclick(1)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x1" style="background-color:rgb(100, 0, 0)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width:25%">
+                    <div onclick="myclick(2)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x2" style="background-color:rgb(0, 100, 0)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width: 25%">
+                    <div onclick="myclick(3)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x3" style="background-color:rgb(0, 0, 100)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width: 25%">
+                    <div onclick="myclick(4)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x4" style="background-color:rgb(100, 100, 0)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%">
+                    <div onclick="myclick(5)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x5" style="background-color:rgb(100, 0, 100)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width:25%">
+                    <div onclick="myclick(6)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x6" style="background-color:rgb(0, 100, 100)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width: 25%">
+                    <div onclick="myclick(7)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x7" style="background-color:rgb(83, 42, 76)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width: 25%">
+                    <div onclick="myclick(8)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x8" style="background-color:rgb(70, 70, 70)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%">
+                    <div onclick="myclick(9)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x9" style="background-color:rgb(70, 92, 100)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width:25%">
+                    <div onclick="myclick(10)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x10" style="background-color:rgb(34, 51, 42)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width: 25%">
+                    <div onclick="myclick(11)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x11" style="background-color:rgb(99, 71, 40)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width: 25%">
+                    <div onclick="myclick(12)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x12" style="background-color:rgb(117, 11, 54)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%">
+                    <div onclick="myclick(13)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x13" style="background-color:rgb(78, 140, 88)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width:25%">
+                    <div onclick="myclick(14)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x14" style="background-color:rgb(150, 150, 0)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width: 25%">
+                    <div onclick="myclick(15)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x15" style="background-color:rgb(47, 1, 95)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td style="width: 25%">
+                    <div onclick="myclick(16)">
+                        <table style="width: 100px; height: 100px; margin-left: auto; margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td id="x16" style="background-color:rgb(50, 0, 0)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+
+    <div class="footer">
+        <h2>Projekt systemy wbudowane</h2>
+
+    </div>
+
+</body>
+
+</html>
